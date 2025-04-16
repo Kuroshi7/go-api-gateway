@@ -9,9 +9,47 @@ Content-Type: application/json
 
 {
     "name": "Bob Joe",
-    "email": "Bob@joe.com"
+    "email": "Bob@joew.com"
 }
 
 ### Obter dados da conta
 GET {{baseUrl}}/accounts
 X-API-Key: {{apiKey}}
+
+### Criar uma nova fatura
+# @name createInvoice
+POST {{baseUrl}}/invoice
+Content-Type: application/json
+X-API-Key: {{apiKey}}
+
+{
+    "amount": 100.50,
+    "description": "Teste de fatura",
+    "payment_type": "credit_card",
+    "card_number": "4111111111111111",
+    "cvv": "123",
+    "expiry_month": 12,
+    "expiry_year": 2025,
+    "cardholder_name": "John Doe"
+}
+
+### Obter uma fatura específica
+@invoiceId = {{createInvoice.response.body.id}}
+GET {{baseUrl}}/invoice/{{invoiceId}}
+X-API-Key: {{apiKey}}
+
+### Tentar criar fatura com valor alto (> 10000)
+POST {{baseUrl}}/invoice
+Content-Type: application/json
+X-API-Key: {{apiKey}}
+
+{
+    "amount": 15000,
+    "description": "Teste de fatura com valor alto",
+    "payment_type": "credit_card",
+    "card_number": "4111111111111111",
+    "cvv": "123",
+    "expiry_month": 12,
+    "expiry_year": 2025,
+    "cardholder_name": "John Doe"
+} 

@@ -51,7 +51,7 @@ func (s *InvoiceService) Create(input dto.CreateInvoiceInput) (*dto.InvoiceOutpu
 
 }
 
-func (s *InvoiceService) GetByID(id string, apiKey string) (*dto.InvoiceOutput, error) {
+func (s *InvoiceService) GetByID(id, apiKey string) (*dto.InvoiceOutput, error) {
 	invoice, err := s.invoiceRepository.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -79,11 +79,10 @@ func (s *InvoiceService) ListByAccount(accountID string) ([]*dto.InvoiceOutput, 
 	for i, invoice := range invoices {
 		output[i] = dto.FromInvoice(invoice)
 	}
-
 	return output, nil
 }
 
-//list by account API key
+// ListByAccountAPIKey lista as faturas de uma conta através de uma API Key
 func (s *InvoiceService) ListByAccountAPIKey(apiKey string) ([]*dto.InvoiceOutput, error) {
 	accountOutput, err := s.accountService.FindByAPIKey(apiKey)
 	if err != nil {
