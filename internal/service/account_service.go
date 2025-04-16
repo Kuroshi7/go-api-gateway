@@ -6,17 +6,22 @@ import (
 )
 
 // AccountService implementa a lógica de negócios para operações com Account
+// Por que usar um serviço?
+// Separa a lógica de negócios da lógica de persistência, facilitando a manutenção e testes.
 type AccountService struct {
 	repository domain.AccountRepository
 }
 
 // NewAccountService cria um novo serviço de contas
+// Por que usar um construtor?
+// Garante que o serviço seja inicializado corretamente com um repositório válido.
 func NewAccountService(repository domain.AccountRepository) *AccountService {
 	return &AccountService{repository: repository}
 }
 
 // CreateAccount cria uma nova conta e valida duplicidade de API Key
-// Retorna ErrDuplicatedAPIKey se a chave já existir
+// Por que validar duplicidade?
+// Garante que cada conta tenha uma chave API única, evitando conflitos.
 func (s *AccountService) CreateAccount(input dto.CreateAccountInput) (*dto.AccountOutput, error) {
 	account := dto.ToAccount(input)
 
@@ -39,7 +44,8 @@ func (s *AccountService) CreateAccount(input dto.CreateAccountInput) (*dto.Accou
 }
 
 // UpdateBalance atualiza o saldo de uma conta de forma thread-safe
-// O amount pode ser positivo (crédito)
+// Por que thread-safe?
+// Garante que o saldo seja atualizado corretamente mesmo com acessos concorrentes.
 func (s *AccountService) UpdateBalance(apiKey string, amount float64) (*dto.AccountOutput, error) {
 	account, err := s.repository.FindByAPIKey(apiKey)
 	if err != nil {
@@ -56,6 +62,8 @@ func (s *AccountService) UpdateBalance(apiKey string, amount float64) (*dto.Acco
 }
 
 // FindByAPIKey busca uma conta pelo API Key
+// Por que ter um método FindByAPIKey?
+// Permite buscar uma conta de forma eficiente usando a chave API como identificador único.
 func (s *AccountService) FindByAPIKey(apiKey string) (*dto.AccountOutput, error) {
 	account, err := s.repository.FindByAPIKey(apiKey)
 	if err != nil {
@@ -66,6 +74,8 @@ func (s *AccountService) FindByAPIKey(apiKey string) (*dto.AccountOutput, error)
 }
 
 // FindByID busca uma conta pelo ID
+// Por que ter um método FindByID?
+// Permite buscar uma conta específica usando o ID como chave única.
 func (s *AccountService) FindByID(id string) (*dto.AccountOutput, error) {
 	account, err := s.repository.FindByID(id)
 	if err != nil {
